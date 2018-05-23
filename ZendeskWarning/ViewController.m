@@ -8,22 +8,28 @@
 
 #import "ViewController.h"
 
+@import ZendeskCoreSDK;
+@import ZendeskSDK;
+
 @interface ViewController ()
 
 @end
 
 @implementation ViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad
+{
+    [ZDKZendesk initializeWithAppId:@"appID" clientId:@"secret" zendeskUrl:@"https://support.strava.com"];
+    [ZDKSupport initializeWithZendesk:[ZDKZendesk instance]];
+    id<ZDKObjCIdentity> userIdentity = [[ZDKObjCAnonymous alloc] initWithName:nil email:nil];
+    [[ZDKZendesk instance] setIdentity:userIdentity];
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)showArticle:(id)sender
+{
+    UIViewController *articleController = [ZDKHelpCenterUi buildHelpCenterArticleWithArticleId:@"216919427"
+                                                                                    andConfigs:@[]];
+    [self.navigationController pushViewController:articleController animated:YES];
 }
-
 
 @end
